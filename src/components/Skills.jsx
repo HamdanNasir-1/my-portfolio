@@ -10,7 +10,10 @@ export default function Skills() {
           <span className="skill-item">JavaScript</span>
           <span className="skill-item">React</span>
           <span className="skill-item">C</span>
+          <span className="skill-item">C++</span>
+          <span className="skill-item">JAVA</span>
           <span className="skill-item">Machine Learning</span>
+          <span className="skill-item">DSAinC++</span>
         </div>
       </div>
     </section>
