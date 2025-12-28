@@ -17,29 +17,115 @@
 //     </section>
 //   );
 // }
+// import { useRef, useState } from "react";
+// import emailjs from "@emailjs/browser";
+
+// export default function Contact() {
+//   const formRef = useRef();
+//   const [loading, setLoading] = useState(false);
+//   const [status, setStatus] = useState("");
+
+//   const sendEmail = (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setStatus("");
+
+//     emailjs
+//       .sendForm(
+//         "service_yzf859l",   // 🔴 replace
+//         "template_8q7zwjx",  // 🔴 replace
+//         formRef.current,
+//         "KOVb8QMqKd78gG8Jw"    // 🔴 replace
+//       )
+//       .then(
+//         () => {
+//           setStatus("Message sent successfully ✅");
+//           setLoading(false);
+//           formRef.current.reset();
+//         },
+//         () => {
+//           setStatus("Something went wrong  Please try again.");
+//           setLoading(false);
+//         }
+//       );
+//   };
+
+//   return (
+//     <section className="contact-section" id="contact">
+//       <div className="contact-container">
+//         <h2 className="section-title">Contact Me</h2>
+//         <p>Have a question or want to work together? Feel free to reach out.</p>
+
+//         <form ref={formRef} onSubmit={sendEmail} className="contact-form">
+//           <input
+//             type="text"
+//             name="from_name"
+//             placeholder="Your Name"
+//             required
+//           />
+
+//           <input
+//             type="email"
+//             name="reply_to"
+//             placeholder="Your Email"
+//             required
+//           />
+
+//           <textarea
+//             name="message"
+//             placeholder="What do you want to ask or tell me?"
+//             required
+//           />
+
+//           <button type="submit" disabled={loading}>
+//             {loading ? "Sending..." : "Send Message"}
+//           </button>
+
+//           {status && <p className="form-status">{status}</p>}
+//         </form>
+//       </div>
+//     </section>
+//   );
+// }
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const formRef = useRef();
+
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  // ✅ Email Regex (standard + safe)
+  const emailRegex =
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const sendEmail = (e) => {
     e.preventDefault();
-    setLoading(true);
     setStatus("");
+    setEmailError("");
+
+    const email = formRef.current.reply_to.value.trim();
+
+    // 🔒 Regex validation
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
 
     emailjs
       .sendForm(
-        "service_yzf859l",   // 🔴 replace
-        "template_8q7zwjx",  // 🔴 replace
+        "service_yzf859l",   // ✅ already replaced by you
+        "template_8q7zwjx",  // ✅ already replaced by you
         formRef.current,
-        "KOVb8QMqKd78gG8Jw"    // 🔴 replace
+        "KOVb8QMqKd78gG8Jw"    // ✅ already replaced by you
       )
       .then(
         () => {
-          setStatus("Message sent successfully ✅");
+          setStatus("Message sent successfully ");
           setLoading(false);
           formRef.current.reset();
         },
@@ -54,35 +140,40 @@ export default function Contact() {
     <section className="contact-section" id="contact">
       <div className="contact-container">
         <h2 className="section-title">Contact Me</h2>
-        <p>Have a question or want to work together? Feel free to reach out.</p>
+         <p>Have a question or want to work together? Feel free to reach out.</p>
 
-        <form ref={formRef} onSubmit={sendEmail} className="contact-form">
-          <input
-            type="text"
-            name="from_name"
-            placeholder="Your Name"
-            required
-          />
+      <form ref={formRef} onSubmit={sendEmail} className="contact-form">
+        <input
+          type="text"
+          name="from_name"
+          placeholder="Your Name"
+          required
+        />
 
-          <input
-            type="email"
-            name="reply_to"
-            placeholder="Your Email"
-            required
-          />
+        <input
+          type="text"
+          name="reply_to"
+          placeholder="Your Email"
+          required
+        />
 
-          <textarea
-            name="message"
-            placeholder="What do you want to ask or tell me?"
-            required
-          />
+        {emailError && (
+          <p className="form-error">{emailError}</p>
+        )}
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Sending..." : "Send Message"}
-          </button>
+        <textarea
+          name="message"
+          placeholder="Write your message..."
+          rows="6"
+          required
+        />
 
-          {status && <p className="form-status">{status}</p>}
-        </form>
+        <button type="submit" disabled={loading}>
+          {loading ? "Sending..." : "Send Message"}
+        </button>
+
+        {status && <p className="form-status">{status}</p>}
+      </form>
       </div>
     </section>
   );
